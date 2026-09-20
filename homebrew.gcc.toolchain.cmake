@@ -47,6 +47,13 @@ if(EXISTS "${_qw_gxx}")
   set(CMAKE_CXX_COMPILER "${_qw_gxx}")
 endif()
 
+if(EXISTS "${_qw_gcc_bin}/gcc-ar")
+  set(CMAKE_AR "${_qw_gcc_bin}/gcc-ar" CACHE FILEPATH "" FORCE)
+endif()
+if(EXISTS "${_qw_gcc_bin}/gcc-ranlib")
+  set(CMAKE_RANLIB "${_qw_gcc_bin}/gcc-ranlib" CACHE FILEPATH "" FORCE)
+endif()
+
 set(CMAKE_PREFIX_PATH "${HOMEBREW_GCC_PREFIX}" ${CMAKE_PREFIX_PATH})
 
 execute_process(COMMAND xcrun --show-sdk-path OUTPUT_VARIABLE MACOS_SDK_PATH OUTPUT_STRIP_TRAILING_WHITESPACE)

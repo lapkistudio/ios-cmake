@@ -154,7 +154,7 @@
 #   command.
 #
 
-cmake_minimum_required(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.30)
 
 # CMake invokes the toolchain file twice during the first build, but only once during subsequent rebuilds.
 # NOTE: To improve single-library build-times, provide the flag "OS_SINGLE_BUILD" as a build argument.
@@ -218,7 +218,32 @@ if(DEFINED PLATFORM)
 elseif(DEFINED ENV{_PLATFORM})
   set(PLATFORM "$ENV{_PLATFORM}")
 elseif(NOT DEFINED PLATFORM)
-  message(FATAL_ERROR "PLATFORM argument not set. Bailing configure since I don't know what target you want to build for!")
+  message(FATAL_ERROR "PLATFORM argument not set. Bailing configure since I don't know what target you want to build for!\n"
+          "\tOS = Build for iPhoneOS.\n"
+          "\tOS64 = Build for arm64 iphoneOS.\n"
+          "\tOS64COMBINED = Build for arm64 x86_64 iphoneOS + iphoneOS Simulator. Combined into FAT STATIC lib (only supported on 3.14+ of CMake with \"-G Xcode\" argument in combination with the \"cmake --install\" CMake build step)\n"
+          "\tSIMULATOR = Build for x86 i386 iphoneOS Simulator.\n"
+          "\tSIMULATOR64 = Build for x86_64 iphoneOS Simulator.\n"
+          "\tSIMULATORARM64 = Build for arm64 iphoneOS Simulator.\n"
+          "\tSIMULATOR64COMBINED = Build for arm64 x86_64 iphoneOS Simulator. Combined into FAT STATIC lib (supported on 3.14+ of CMakewith \"-G Xcode\" argument ONLY)\n"
+          "\tTVOS = Build for arm64 tvOS.\n"
+          "\tTVOSCOMBINED = Build for arm64 x86_64 tvOS + tvOS Simulator. Combined into FAT STATIC lib (only supported on 3.14+ of CMake with \"-G Xcode\" argument in combination with the \"cmake --install\" CMake build step)\n"
+          "\tSIMULATOR_TVOS = Build for x86_64 tvOS Simulator.\n"
+          "\tSIMULATORARM64_TVOS = Build for arm64 tvOS Simulator.\n"
+          "\tVISIONOSCOMBINED = Build for arm64 visionOS + visionOS Simulator. Combined into FAT STATIC lib (only supported on 3.14+ of CMake with \"-G Xcode\" argument in combination with the \"cmake --install\" CMake build step)\n"
+          "\tVISIONOS = Build for arm64 visionOS.\n"
+          "\tSIMULATOR_VISIONOS = Build for arm64 visionOS Simulator.\n"
+          "\tWATCHOS = Build for armv7k arm64_32 for watchOS.\n"
+          "\tWATCHOSCOMBINED = Build for armv7k arm64_32 x86_64 watchOS + watchOS Simulator. Combined into FAT STATIC lib (only supported on 3.14+ of CMake with \"-G Xcode\" argument in combination with the \"cmake --install\" CMake build step)\n"
+          "\tSIMULATOR_WATCHOS = Build for x86_64 for watchOS Simulator.\n"
+          "\tSIMULATORARM64_WATCHOS = Build for arm64 for watchOS Simulator.\n"
+          "\tSIMULATOR_WATCHOSCOMBINED = Build for arm64 x86_64 for watchOS Simulator. Combined into FAT STATIC lib (supported on 3.14+ of CMakewith \"-G Xcode\" argument ONLY)\n"
+          "\tMAC = Build for x86_64 macOS.\n"
+          "\tMAC_ARM64 = Build for Apple Silicon macOS.\n"
+          "\tMAC_UNIVERSAL = Combined build for x86_64 and Apple Silicon on macOS.\n"
+          "\tMAC_CATALYST = Build for x86_64 macOS with Catalyst support (iOS toolchain on macOS). Note: The build argument \"MACOSX_DEPLOYMENT_TARGET\" can be used to control min-version of macOS\n"
+          "\tMAC_CATALYST_ARM64 = Build for Apple Silicon macOS with Catalyst support (iOS toolchain on macOS). Note: The build argument can be used to control min-version of macOS\n"
+          "\tMAC_CATALYST_UNIVERSAL = Combined build for x86_64 and Apple Silicon on Catalyst.\n")
 endif ()
 
 if(PLATFORM MATCHES ".*COMBINED" AND NOT CMAKE_GENERATOR MATCHES "Xcode")

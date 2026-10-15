@@ -884,6 +884,24 @@ elseif(PLATFORM STREQUAL "VISIONOS" OR PLATFORM STREQUAL "SIMULATOR_VISIONOS" OR
 else()
   set(IOS ON CACHE BOOL "")
 endif()
+# CMake treats a toolchain that sets CMAKE_SYSTEM_NAME as a cross build
+# unless the toolchain says otherwise. These macOS platforms target the
+# host OS. Mark the build native when this machine can run the binaries.
+# x86_64-on-Apple-Silicon stays a cross build.
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+  set(_ios_toolchain_native_macos FALSE)
+  if(PLATFORM STREQUAL "MAC_UNIVERSAL")
+    set(_ios_toolchain_native_macos TRUE)
+  elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(arm64|aarch64)$" AND ARCHS STREQUAL "arm64" AND PLATFORM STREQUAL "MAC_ARM64")
+    set(_ios_toolchain_native_macos TRUE)
+  elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64|AMD64)$" AND ARCHS STREQUAL "x86_64" AND PLATFORM STREQUAL "MAC")
+    set(_ios_toolchain_native_macos TRUE)
+  endif()
+  if(_ios_toolchain_native_macos)
+    set(CMAKE_CROSSCOMPILING FALSE)
+  endif()
+  unset(_ios_toolchain_native_macos)
+endif()
 # Set the architectures for which to build.
 set(CMAKE_OSX_ARCHITECTURES ${ARCHS} CACHE INTERNAL "")
 # Change the type of target generated for try_compile() so it'll work when cross-compiling, weak compiler checks
